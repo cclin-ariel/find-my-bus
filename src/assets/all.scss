@@ -1,0 +1,17 @@
+@import "~bootstrap/scss/functions";
+@import "../assets/helpers/_varialbles.scss";
+@import "~bootstrap/scss/bootstrap";
+@import url("https://pro.fontawesome.com/releases/v5.10.0/css/all.css");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300&family=Noto+Serif+TC:wght@500&display=swap");
+.Noto-Serif {
+  font-family: "Noto Serif TC", serif;
+}
+.Noto-Sans {
+  font-family: "Noto Sans TC", sans-serif;
+}
+.hidden {
+  display: none !important;
+}
+.showing {
+  display: block;
+}

@@ -1,4 +1,6 @@
 <template>
+<Header/>
+
      result page
     <div>
         <router-link :to="{
@@ -11,11 +13,12 @@
 </template>
 
 <script>
-// import { defineComponent } from "vue";
-// import { useRoute } from "vue";
+import Header from "./Header.vue";
+
 
 export default {
     name: "SearchResult",
+  components: { Header },
 
     data() {
         return {
