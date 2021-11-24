@@ -44,11 +44,7 @@
               </svg>
             </router-link>
           </div>
-          <router-link
-            :to="{ name: 'Index' }"
-            class="navbar-brand text-bldGreen"
-            >盲選小旅行</router-link
-          >
+
           <div
             class="
               title
@@ -111,9 +107,9 @@ export default {
 }
 
 @media (min-width: 768px) {
-  .bd-placeholder-img-lg {
-    font-size: 3.5rem;
-  }
+.title {
+  font-size: 20px;
+}
   nav {
     margin: 20px 40px;
     max-width: 1200px;
