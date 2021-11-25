@@ -44,7 +44,7 @@
           選擇公車路線
         </div>
         <select
-          class="card-body form-select text-center"
+          class="card-body form-select-sm text-center"
           aria-label="Default select example"
         >
           <option selected>307</option>
@@ -55,18 +55,21 @@
       </div>
 
       <router-link
+        v-if="false"
         :to="{ name: 'SearchResult', params: { routeName: this.routeName } }"
         >get your search result</router-link
       >
     </div>
+    <Footer />
   </div>
 </template>
 
 <script>
 import Header from "./Header.vue";
+import Footer from "./Footer.vue";
 export default {
   name: "Index",
-  components: { Header },
+  components: { Header, Footer },
   data() {
     return {
       routeName: "623",
@@ -81,7 +84,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .search-title {
   margin-bottom: 50px;
   margin-top: 80px;
@@ -118,10 +121,25 @@ form {
 .card {
   font-size: 18px;
   font-weight: 400;
-  /* height: 82px; */
+  margin-bottom: 93px;
+  border: 0;
 }
 .card-header {
   height: 37px;
+  border: 1px solid #7ca23c;
+  border-radius: 10px 10px 0 0;
+}
+select {
+  height: 40px;
+  padding: 0;
+  font-size: 18px;
+  border: 1px solid #7ca23c;
+  border-radius: 0 0 10px 10px;
+}
+option {
+  font-size: 18px;
+
+  /* padding: 0; */
 }
 
 .Landing-Page-First-Impression {
