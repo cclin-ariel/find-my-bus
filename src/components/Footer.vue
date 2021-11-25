@@ -11,24 +11,27 @@
 再搜尋一次👇🏻
         </pre>
         <div>
-          <button class="footer-btn btn btn-bldGreen text-white Noto-Sans px-2">
-            找指定的公車
-          </button>
+          <router-link :to="{ name: 'Index' }">
+            <button
+              class="footer-btn btn btn-bldGreen text-white Noto-Sans px-2"
+            >
+              找指定的公車
+            </button>
+          </router-link>
         </div>
       </div>
       <div class="black-footer py-5">
         <div class="createdBy py-0 my-0 Noto-Serif">
           <p>
-            Designed by 
+            Designed by
             <a href="https://www.instagram.com/kou.ikusen/">Kiks</a> and
-            Developed by 
+            Developed by
             <a href="https://twitter.com/wahaha47168">cclin</a> with ❤️
           </p>
           <div class="mobile Noto-Serif lh-1">
             <p>
-              Designed by <a href="https://www.instagram.com/kou.ikusen/"
-                >Kiks</a
-              >
+              Designed by
+              <a href="https://www.instagram.com/kou.ikusen/">Kiks</a>
             </p>
             <p>
               Developed by <a href="https://twitter.com/wahaha47168">cclin</a>
@@ -111,7 +114,7 @@ p.title,
   text-align: center;
   margin-bottom: 11px;
 }
-.mobile p{
+.mobile p {
   margin-bottom: 10px;
 }
 .green-footer.bg-bldGreen {
