@@ -3,6 +3,7 @@
 <template>
   <div class="container bg-bldWhite">
     <div class="sessions mt-4 mx-auto">
+
       <!-- one way bus noticed -->
       <div v-if="Direction0.length < 1" class="Noto-Sans text-right fs-6">
         ※無資料
@@ -99,6 +100,7 @@ export default {
     //watch the stop from BusDetail's dropdownlist
     theStop() {
       this.Direction0Temp = this.Direction0;
+      
       //set to the focused stop, and update to Direction0Temp(v-form用array)
       const index = this.Direction0.findIndex(
         (element) => element.StopID == this.theStop

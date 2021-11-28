@@ -70,15 +70,12 @@
             </button></router-link
           >
         </div>
-        <!-- start of 巴士時刻表 -->
+        <!-- end of 去返程 選擇按鈕 -->
+
+        <!-- start of 巴士時刻表  component: Direction0 / Direction1 -->
         <router-view :routeIDupdate="routeID" :theStop="theStop" />
       </div>
     </transition>
-      <!-- end of 去返程 選擇按鈕 -->
-
-      <!-- start of 巴士時刻表  component: Direction0 / Direction1 -->
-      <router-view :routeIDupdate="routeID" :theStop="theStop" />
-    </div>
   </div>
 
   <Footer />
