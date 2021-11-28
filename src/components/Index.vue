@@ -10,10 +10,14 @@
     </div>
   </div>
   <!-- end of loading -->
+
+  <!-- loading動畫結束 網頁進場動畫開始 -->
   <div class="animate-bottom" v-if="!this.isLoading">
     <div class="fixed-top">
       <Header />
     </div>
+
+    <!-- start of input search area -->
     <div class="container-fluid pt-5">
       <div class="search-title text-center text-bldBlack Noto-Serif">
         找指定的公車
@@ -39,12 +43,17 @@
           </button>
         </router-link>
       </form>
+      <!-- end of input search area -->
+
+      <!-- star of 間隔線 -->
       <div class="OR text-bldGreen">
         <span class="line"></span>
         <span class="txt Noto-Serif">或是</span>
         <span class="line"></span>
       </div>
+      <!-- end of 間隔線 -->
 
+      <!-- 下拉選單 開始 -->
       <div class="card mx-auto">
         <div
           id="selected-routeName"
@@ -56,7 +65,7 @@
           v-model="selected"
           class="card-body form-select-sm text-center"
           aria-label="Default select example"
-          @change="updateRouteNameToDetail"
+          @change="updateRouteIdToDetail"
         >
           <option value="">請選擇</option>
           <option
@@ -68,6 +77,7 @@
           </option>
         </select>
       </div>
+      <!--  下拉選單 結束-->
     </div>
     <Footer />
   </div>
@@ -83,36 +93,26 @@ export default {
   components: { Header, Footer },
   data() {
     return {
-      isLoading: true,
-      routeName: "none",
-      tempRouteName: "",
-      selected: "",
-      RouteID: "none",
-      busRoutes: [],
+      isLoading: true, // loading animation
+      routeName: "none", //send to SearchResult page by router
+      RouteID: "none", //send to BusDetail page by router
+      tempRouteName: "", //input search value
+      selected: "", //dropdown list search value
+      busRoutes: [], //dropdown list option
     };
   },
   created() {
+    //get dropdown list option
     this.getBusRoutes();
   },
   mounted() {
+    //loading animation
     setTimeout(() => {
       this.isLoading = false;
-    }, 1500);
+    }, 500);
   },
   methods: {
-    updateRouteName() {
-      this.routeName = this.tempRouteName;
-    },
-    updateRouteNameToDetail() {
-      this.RouteID = this.selected;
-      this.$router.push({
-        name: "BusDetail",
-        params: {
-          routeID: this.selected,
-          // routeName: this.routeName,
-        },
-      });
-    },
+    // get bus list for dropdown list
     getBusRoutes() {
       const vm = this;
       const axios = require("axios");
@@ -132,6 +132,21 @@ export default {
 
       this.getAuthorizationHeader();
     },
+    // update value from input search value
+    updateRouteName() {
+      this.routeName = this.tempRouteName;
+    },
+    //update value from dropdown list value
+    updateRouteIdToDetail() {
+      this.RouteID = this.selected;
+      this.$router.push({
+        name: "BusDetail",
+        params: {
+          routeID: this.selected,
+        },
+      });
+    },
+
     getAuthorizationHeader() {
       //  填入自己 ID、KEY 開始
       let AppID = "769b6e9f60594d2397e5ae2e24a5c5e3";

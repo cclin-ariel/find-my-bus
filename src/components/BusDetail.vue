@@ -2,6 +2,7 @@
   <div class="fixed-top">
     <Header />
   </div>
+
   <div class="container-fluid pt-5">
     <div class="detail-title text-center text-bldBlack Noto-Serif">
       <span class="text-bldGreen">{{ routeName }}</span> 路線的到站資訊
@@ -35,7 +36,7 @@
               search-btn
               btn
               text-bldBlack
-              Noto-Serif
+              Noto-Sans
               px-5
               my-1
             "
@@ -51,7 +52,7 @@
               direction-btn
               btn btn-white
               text-bldBlack
-              Noto-Serif
+              Noto-Sans
               px-5
               my-1
             "
@@ -61,7 +62,7 @@
           </button></router-link
         >
       </div>
-
+      <!-- start of 巴士時刻表 -->
       <router-view :routeIDupdate="routeID" :theStop="theStop" />
     </div>
   </div>
