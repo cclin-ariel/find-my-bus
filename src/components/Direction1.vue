@@ -1,19 +1,30 @@
+<!--  Direction: 1  -->
+
 <template>
   <div class="container bg-bldWhite">
     <div class="sessions mt-4 mx-auto">
+      <!-- one way bus noticed -->
       <div v-if="Direction1.length < 1" class="Noto-Sans text-right fs-6">
         ※無資料
       </div>
+
+      <!-- start of the timetable list   Direction: 1 -->
+
       <div
         v-else
         v-for="(stop, index) in Direction1Temp.slice(0, 7)"
         :key="index"
         class="row g-1"
       >
+        <!-- start of the left side of vertical timeline -->
+
         <div class="col-3 timeline-left text-center">
           <div class="row time">
             {{ arriveTime(stop.NextBusTime) }}
           </div>
+
+          <!-- start of arrow 若有預計進站巴士 則顯示  -->
+
           <div
             v-if="
               stop.PlateNumb &&
@@ -21,7 +32,13 @@
             "
             class="row arrow ms-1"
           ></div>
+          <!-- end of arrow -->
         </div>
+
+        <!-- end of the left side of vertical timeline -->
+
+        <!-- start of the right side of vertical timeline -->
+
         <div
           class="noBus col-8"
           :class="{
@@ -29,6 +46,8 @@
             noBus: stop.VehicleStopStatus !== 1,
           }"
         >
+          <!-- index 為三的位置 是focused  -->
+
           <div
             :class="{
               bldBlack: index !== 3,

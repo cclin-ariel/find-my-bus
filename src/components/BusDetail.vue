@@ -8,6 +8,7 @@
       <span class="text-bldGreen">{{ routeName }}</span> 路線的到站資訊
     </div>
 
+    <!-- start of 指定站牌下拉選單 -->
     <div class="card mx-auto">
       <div class="card-header text-center bg-bldGreen text-white">指定站牌</div>
       <select
@@ -25,9 +26,12 @@
         </option>
       </select>
     </div>
+    <!-- end of 指定站牌下拉選單 -->
 
     <transition name="slide-fade" mode="out-in">
       <!-- when theStop value changes, trigger slide-fade transition -->
+
+      <!-- start of 去返程 選擇按鈕 -->
       <div :key="theStop" class="stops-card px-2 mx-auto">
         <div class="direction-selection d-flex justify-content-evenly mx-auto">
           <router-link :to="{ name: 'Direction0' }">
@@ -70,6 +74,11 @@
         <router-view :routeIDupdate="routeID" :theStop="theStop" />
       </div>
     </transition>
+      <!-- end of 去返程 選擇按鈕 -->
+
+      <!-- start of 巴士時刻表  component: Direction0 / Direction1 -->
+      <router-view :routeIDupdate="routeID" :theStop="theStop" />
+    </div>
   </div>
 
   <Footer />
@@ -86,23 +95,22 @@ export default {
   components: { Header, Footer },
 
   props: {
+    // from landing page
     routeID: { type: String, required: true },
   },
   data() {
     return {
-      busStop: 1,
-      direction: 0,
-      routeDetail: {},
-      routeName: "",
-      stopsList: [],
-      theStop: "", //selected
+      routeName: "", // the route of this detail page, and print to the page tittle
+      stopsList: [], //dropdown list
+      theStop: "", //dropdown list value to switch the focused stop in the 巴士時刻表
     };
   },
   created() {
+    //get the dropdown list option
     this.getStopsList();
   },
-  mounted() {},
   methods: {
+    //get the dropdown list option
     getStopsList() {
       const vm = this;
       const axios = require("axios");
@@ -113,8 +121,7 @@ export default {
           headers: vm.getAuthorizationHeader(),
         })
         .then((response) => {
-          vm.routeDetail = response.data;
-          vm.routeName = vm.routeDetail[0].RouteName.Zh_tw;
+          vm.routeName = response.data[0].RouteName.Zh_tw;
 
           vm.stopsList = response.data[0].Stops.sort(function (a, b) {
             // boolean false == 0; true == 1

@@ -1,18 +1,26 @@
+<!--  Direction: 0  -->
+
 <template>
   <div class="container bg-bldWhite">
     <div class="sessions mt-4 mx-auto">
+      <!-- one way bus noticed -->
       <div v-if="Direction0.length < 1" class="Noto-Sans text-right fs-6">
         ※無資料
       </div>
+
+      <!-- start of the timetable list   Direction: 0 -->
       <div
         v-for="(stop, index) in Direction0Temp.slice(0, 7)"
         :key="index"
         class="row g-1"
       >
+        <!-- start of the left side of vertical timeline -->
         <div class="col-3 timeline-left text-center">
           <div class="row time">
             {{ arriveTime(stop.NextBusTime) }}
           </div>
+
+          <!-- start of arrow 若有預計進站巴士 則顯示  -->
           <div
             v-if="
               stop.PlateNumb &&
@@ -20,7 +28,11 @@
             "
             class="row arrow ms-1"
           ></div>
+          <!-- end of arrow -->
         </div>
+        <!-- end of the left side of vertical timeline -->
+
+        <!-- start of the right side of vertical timeline -->
         <div
           class="noBus col-8"
           :class="{
@@ -28,6 +40,7 @@
             noBus: stop.VehicleStopStatus !== 1,
           }"
         >
+          <!-- index 為三的位置 是focused  -->
           <div
             :class="{
               bldBlack: index !== 3,
@@ -36,9 +49,10 @@
             class="stop Noto-Sans"
           >
             <img v-if="index == 3" src="../img/pin.svg" alt="pin" />
-
             {{ stop.StopName.Zh_tw }}
           </div>
+
+          <!--start of 當巴士站的即時資訊 -->
           <p v-if="stop.StopStatus == 1">尚未發車</p>
           <p v-if="stop.StopStatus == 2">交管不停靠</p>
           <p v-if="stop.StopStatus == 3">末班車已過</p>
@@ -48,9 +62,11 @@
             {{ secondBetweenTwoDate(stop.NextBusTime) }}
             分鐘後到站
           </p>
-          <!-- {{ stop.EstimateTime }} -->
+          <!--end of 當巴士站的即時資訊 -->
         </div>
+        <!-- end of the right side of vertical timeline -->
       </div>
+      <!-- end of the timetable -->
     </div>
   </div>
 </template>
@@ -72,42 +88,44 @@ export default {
   },
   data() {
     return {
-      Direction0: [], //ordered full data
-      Direction1: [], //ordered full data
-      Direction0Temp: [], //v-for
-      Direction1Temp: [], //v-for
+      Direction0: [], //ordered full data 原始Array
+      Direction0Temp: [], //v-form用array
     };
   },
   created() {
     this.getBusTime();
   },
   watch: {
+    //watch the stop from BusDetail's dropdownlist
     theStop() {
       this.Direction0Temp = this.Direction0;
+      //set to the focused stop, and update to Direction0Temp(v-form用array)
       const index = this.Direction0.findIndex(
         (element) => element.StopID == this.theStop
       );
-      console.log("original", this.Direction0);
       if (index > 3) this.Direction0Temp = this.Direction0Temp.slice(index - 3);
 
-      console.log("changed", this.Direction0Temp);
-
+      //when the value change, reload the timetable
       this.$forceUpdate(this.Direction0Temp);
     },
   },
-  computed: {},
   methods: {
+    // formatter the time
     arriveTime(NextBusTime) {
       let x = new Date(NextBusTime);
       if (x.getMinutes() < 10) return `${x.getHours()} : 0${x.getMinutes()}`;
       if (x.getMinutes() > 10) return `${x.getHours()} : ${x.getMinutes()}`;
     },
+
+    // the waiting time at every stop
     secondBetweenTwoDate(NextBusTime) {
       let x = new Date(NextBusTime);
       return Math.floor(
         Math.abs((new Date().getTime() - x.getTime()) / 1000) / 60
       );
     },
+
+    // get this bus detail
     getBusTime() {
       const vm = this;
       const axios = require("axios");
@@ -117,24 +135,19 @@ export default {
           headers: vm.getAuthorizationHeader(),
         })
         .then((response) => {
+          // 取方向為０的班次
           let temp0 = response.data.filter(
             (busStop) => busStop.Direction == "0"
           );
 
+          // 按站牌順序排列
           vm.Direction0 = temp0.sort(function (a, b) {
             // boolean false == 0; true == 1
             return Number(a.StopSequence) - Number(b.StopSequence);
           });
-          vm.Direction0Temp = vm.Direction0;
 
-          let temp1 = response.data.filter(
-            (busStop) => busStop.Direction == "1"
-          );
-          vm.Direction1 = temp1.sort(function (a, b) {
-            // boolean false == 0; true == 1
-            return Number(a.StopSequence) - Number(b.StopSequence);
-          });
-          vm.Direction1Temp = vm.Direction;
+          // update to Direction0Temp(v-form用array)
+          vm.Direction0Temp = vm.Direction0;
         })
         .catch(function (error) {
           console.log(error);
