@@ -28,43 +28,52 @@
     </div>
     <!-- end of 指定站牌下拉選單 -->
 
-    <!-- start of 去返程 選擇按鈕 -->
-    <div class="stops-card px-2 mx-auto">
-      <div class="direction-selection d-flex justify-content-evenly mx-auto">
-        <router-link :to="{ name: 'Direction0' }">
-          <button
-            :class="{ selectedColor: direction == '0' }"
-            class="
-              direction-btn
-              search-btn
-              btn
-              text-bldBlack
-              Noto-Sans
-              px-5
-              my-1
-            "
-            @click="direction = 0"
+    <transition name="slide-fade" mode="out-in">
+      <!-- when theStop value changes, trigger slide-fade transition -->
+
+      <!-- start of 去返程 選擇按鈕 -->
+      <div :key="theStop" class="stops-card px-2 mx-auto">
+        <div class="direction-selection d-flex justify-content-evenly mx-auto">
+          <router-link :to="{ name: 'Direction0' }">
+            <button
+              :class="{ selectedColor: direction == '0' }"
+              class="
+                direction-btn
+                search-btn
+                btn
+                text-bldBlack
+                Noto-Sans
+                px-5
+                my-1
+              "
+              @click="direction = 0"
+            >
+              去程
+            </button>
+          </router-link>
+          <router-link
+            :to="{ name: 'Direction1', params: { routeID: routeID } }"
           >
-            去程
-          </button>
-        </router-link>
-        <router-link :to="{ name: 'Direction1', params: { routeID: routeID } }">
-          <button
-            :class="{ selectedColor: direction == '1' }"
-            class="
-              direction-btn
-              btn btn-white
-              text-bldBlack
-              Noto-Sans
-              px-5
-              my-1
-            "
-            @click="direction = 1"
+            <button
+              :class="{ selectedColor: direction == '1' }"
+              class="
+                direction-btn
+                btn btn-white
+                text-bldBlack
+                Noto-Sans
+                px-5
+                my-1
+              "
+              @click="direction = 1"
+            >
+              返程
+            </button></router-link
           >
-            返程
-          </button></router-link
-        >
+        </div>
+        <!-- start of 巴士時刻表 -->
+        <router-view :routeIDupdate="routeID" :theStop="theStop" />
       </div>
+    </transition>
       <!-- end of 去返程 選擇按鈕 -->
 
       <!-- start of 巴士時刻表  component: Direction0 / Direction1 -->
@@ -217,5 +226,17 @@ option {
 
 .selectedColor {
   background: #e0e0e0;
+}
+
+/* slide fade animation */
+.slide-fade-enter-active {
+  transition: all 0.3s ease-in-out;
+}
+.slide-fade-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+.slide-fade-enter,
+.slide-fade-leave-to {
+  opacity: 0;
 }
 </style>
