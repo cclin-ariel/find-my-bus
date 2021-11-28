@@ -100,6 +100,7 @@ export default {
       routeName: "", // the route of this detail page, and print to the page tittle
       stopsList: [], //dropdown list
       theStop: "", //dropdown list value to switch the focused stop in the 巴士時刻表
+      direction: 0,
     };
   },
   created() {
