@@ -19,7 +19,7 @@ const routes = [
     props: true,
   },
   {
-    path: "/find-my-bus/searchResult/:routeName/:busStop/",
+    path: "/find-my-bus/BusDetail//:routeID/",
     // /:direction
     name: "BusDetail",
     component: BusDetail,

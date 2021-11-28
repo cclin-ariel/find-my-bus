@@ -6,10 +6,10 @@
           <span>沒有找到想找的公車嗎？</span>
           <span>再搜尋一次👇🏻</span>
         </p>
-        <pre class="title fs-4 px-auto Noto-Serif">
-沒有找到想找的公車嗎？
-再搜尋一次👇🏻
-        </pre>
+        <div class="title-mobile fs-4 px-auto Noto-Serif">
+          <p>沒有找到想找的公車嗎？</p>
+          <p>再搜尋一次👇🏻</p>
+        </div>
         <div>
           <router-link :to="{ name: 'Index' }">
             <button
@@ -24,9 +24,9 @@
         <div class="createdBy py-0 my-0 Noto-Serif">
           <p>
             Designed by
-            <a href="https://www.instagram.com/kou.ikusen/">Kiks</a> and
+            <a href="https://www.instagram.com/kou.ikusen/" target="_blank">Kiks</a> and
             Developed by
-            <a href="https://twitter.com/wahaha47168">cclin</a> with ❤️
+            <a href="https://twitter.com/wahaha47168" target="_blank">cclin</a> with ❤️
           </p>
           <div class="mobile Noto-Serif lh-1">
             <p>
@@ -85,7 +85,6 @@ export default {
   font-size: 16px;
   line-height: 23px;
 }
-
 .createdBy {
   font-size: 16px;
   letter-spacing: 0.64px;
@@ -94,12 +93,14 @@ export default {
   font-size: 12px;
   margin-bottom: 0;
 }
-pre {
+.title-mobile {
+  font-size: 25px;
   margin-bottom: 11px;
   font-size: 16px;
   height: 69px;
+  line-height: 25px;
 }
-pre.title,
+.title-mobile,
 .createdBy > .mobile {
   display: block;
 }
@@ -135,7 +136,7 @@ p.title,
     /* width: 100%; */
     display: inline;
   }
-  pre.title,
+  .title-mobile,
   .createdBy > .mobile {
     display: none;
   }

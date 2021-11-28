@@ -11,27 +11,33 @@
   </div>
   <!-- end of loading -->
   <div class="animate-bottom" v-if="!this.isLoading">
-    <Header />
-    <div class="container-fluid">
+    <div class="fixed-top">
+      <Header />
+    </div>
+    <div class="container-fluid pt-5">
       <div class="search-title text-center text-bldBlack Noto-Serif">
         找指定的公車
       </div>
-
-      <form class="row justify-content-between g-2 Noto-Sans mx-auto p-0">
+      <form class="row g-4 Noto-Sans mx-auto p-0">
         <div class="col-9 search-input p-0">
           <input
+            required
             type="text"
             class="form-control ps-2 pe-0"
             id="routeName"
             placeholder="輸入公車路線名稱"
+            v-model="tempRouteName"
+            @change="updateRouteName"
           />
         </div>
-        <button
-          type="submit"
-          class="col-2 search-btn btn btn-bldGreen text-white"
+        <router-link
+          class="col-3"
+          :to="{ name: 'SearchResult', params: { routeName: this.routeName } }"
         >
-          搜尋
-        </button>
+          <button type="submit" class="search-btn btn btn-bldGreen text-white">
+            搜尋
+          </button>
+        </router-link>
       </form>
       <div class="OR text-bldGreen">
         <span class="line"></span>
@@ -39,32 +45,37 @@
         <span class="line"></span>
       </div>
 
-      <div class="card">
-        <div class="card-header text-center bg-bldGreen text-white">
+      <div class="card mx-auto">
+        <div
+          id="selected-routeName"
+          class="card-header text-center bg-bldGreen text-white"
+        >
           選擇公車路線
         </div>
         <select
+          v-model="selected"
           class="card-body form-select-sm text-center"
           aria-label="Default select example"
+          @change="updateRouteNameToDetail"
         >
-          <option selected>307</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+          <option value="">請選擇</option>
+          <option
+            v-for="route in busRoutes"
+            :value="route.RouteID"
+            :key="route.RouteID"
+          >
+            {{ route.RouteName.Zh_tw }}
+          </option>
         </select>
       </div>
-
-      <router-link
-        v-if="false"
-        :to="{ name: 'SearchResult', params: { routeName: this.routeName } }"
-        >get your search result</router-link
-      >
     </div>
     <Footer />
   </div>
 </template>
 
 <script>
+import jsSHA from "jssha";
+
 import Header from "./Header.vue";
 import Footer from "./Footer.vue";
 export default {
@@ -72,14 +83,73 @@ export default {
   components: { Header, Footer },
   data() {
     return {
-      routeName: "623",
       isLoading: true,
+      routeName: "none",
+      tempRouteName: "",
+      selected: "",
+      RouteID: "none",
+      busRoutes: [],
     };
+  },
+  created() {
+    this.getBusRoutes();
   },
   mounted() {
     setTimeout(() => {
       this.isLoading = false;
     }, 1500);
+  },
+  methods: {
+    updateRouteName() {
+      this.routeName = this.tempRouteName;
+    },
+    updateRouteNameToDetail() {
+      this.RouteID = this.selected;
+      this.$router.push({
+        name: "BusDetail",
+        params: {
+          routeID: this.selected,
+          // routeName: this.routeName,
+        },
+      });
+    },
+    getBusRoutes() {
+      const vm = this;
+      const axios = require("axios");
+      const busRoutesAPI = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/Taoyuan?$format=JSON`;
+
+      axios
+        .get(busRoutesAPI, {
+          headers: vm.getAuthorizationHeader(),
+        })
+        .then((response) => {
+          vm.busRoutes = response.data;
+          // console.log(vm.busRoutes);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      this.getAuthorizationHeader();
+    },
+    getAuthorizationHeader() {
+      //  填入自己 ID、KEY 開始
+      let AppID = "769b6e9f60594d2397e5ae2e24a5c5e3";
+      let AppKey = "qM6fHVPRJkxJTxVkDwJL8ddKJ1A";
+      //  填入自己 ID、KEY 結束
+      let GMTString = new Date().toGMTString();
+      let ShaObj = new jsSHA("SHA-1", "TEXT");
+      ShaObj.setHMACKey(AppKey, "TEXT");
+      ShaObj.update("x-date: " + GMTString);
+      let HMAC = ShaObj.getHMAC("B64");
+      let Authorization =
+        'hmac username="' +
+        AppID +
+        '", algorithm="hmac-sha1", headers="x-date", signature="' +
+        HMAC +
+        '"';
+      return { Authorization: Authorization, "X-Date": GMTString };
+    },
   },
 };
 </script>
@@ -92,13 +162,14 @@ export default {
   font-weight: 400;
 }
 .search-input {
-  width: 292px;
+  max-width: 292px;
 }
 .search-btn {
-  width: 72px;
+  max-width: 72px;
 }
 form {
   max-width: 360px;
+  flex-wrap: nowrap !important;
 }
 .OR {
   height: 60px;
@@ -119,6 +190,8 @@ form {
   letter-spacing: 0.2em;
 }
 .card {
+  max-width: 370px;
+
   font-size: 18px;
   font-weight: 400;
   margin-bottom: 93px;
@@ -138,8 +211,6 @@ select {
 }
 option {
   font-size: 18px;
-
-  /* padding: 0; */
 }
 
 .Landing-Page-First-Impression {

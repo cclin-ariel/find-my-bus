@@ -1,63 +1,105 @@
 <template>
-  <Header />
-  <div class="container-fluid">
+  <div class="fixed-top">
+    <Header />
+  </div>
+  <div class="container-fluid pt-5">
     <div class="search-title text-center text-bldBlack Noto-Serif">
-      <span class="text-bldGreen">{{ this.$route.params.routeName }}</span>
+      <span class="text-bldGreen">{{ searchKeyRouteName }}</span>
       的公車路線搜尋結果
     </div>
   </div>
 
-  <div class="search-result text-center">
-    <router-link
-      :to="{
-        name: 'BusDetail',
-        params: {
-          routeName: this.routeNameToDetail,
-          busStop: this.busStopToDetail,
-          direction: this.directionToDetail,
-        },
-      }"
-    >
-      <button class="search-btn btn btn-white text-bldBlack Noto-Serif px-2">
-        {{ this.$route.params.routeName }}
-      </button>
-    </router-link>
-    <router-link
-      :to="{
-        name: 'BusDetail',
-        params: {
-          routeName: this.routeNameToDetail,
-          busStop: this.busStopToDetail,
-          direction: this.directionToDetail,
-        },
-      }"
-    >
-      <button class="search-btn btn btn-white text-bldBlack Noto-Serif px-2">
-        {{ this.$route.params.routeName }}
-      </button>
-    </router-link>
+  <div class="search-result text-center row">
+    <ul>
+      <li v-for="route in resultRoutes" :key="route.RouteID">
+          <button
+            class="search-btn btn btn-white text-bldBlack Noto-Serif px-2 col"
+            @click="updateRouteToDetail(route)"
+          >
+            {{ route.RouteName.Zh_tw }} 
+          </button>
+      </li>
+    </ul>
   </div>
   <Footer />
 </template>
 
 <script>
+import jsSHA from "jssha";
+
 import Header from "./Header.vue";
 import Footer from "./Footer.vue";
 
 export default {
   name: "SearchResult",
   components: { Header, Footer },
-
+  props: {
+    routeName: {
+      required: true,
+    },
+  },
   data() {
     return {
-      routeNameToDetail: "",
-
-      busStopToDetail: "fourthStop",
+      routeNameToDetail: "none",
+      searchKeyRouteName: "",
+      // busStopToDetail: "fourthStop",
       directionToDetail: 0,
+      resultRoutes: [],
     };
   },
   created() {
-    this.routeNameToDetail = this.$route.params.routeName;
+    this.searchKeyRouteName = this.routeName;
+    this.getBusRoutes();
+  },
+  methods: {
+    getBusRoutes() {
+      const vm = this;
+      const axios = require("axios");
+      const busRoutesAPI = `https://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/Taoyuan/${vm.searchKeyRouteName}?$format=JSON`;
+
+      axios
+        .get(busRoutesAPI, {
+          headers: vm.getAuthorizationHeader(),
+        })
+        .then((response) => {
+          vm.resultRoutes = response.data;
+          console.log(vm.resultRoutes);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      this.getAuthorizationHeader();
+    },
+    updateRouteToDetail(route) {
+      const routeIdToDetail = route.RouteID;
+      this.routeNameToDetail = route.RouteName.Zh_tw;
+      this.$router.push({
+        name: "BusDetail",
+        params: {
+          routeID: routeIdToDetail,
+          routeName: this.routeNameToDetail,
+        },
+      });
+    },
+    getAuthorizationHeader() {
+      //  填入自己 ID、KEY 開始
+      let AppID = "769b6e9f60594d2397e5ae2e24a5c5e3";
+      let AppKey = "qM6fHVPRJkxJTxVkDwJL8ddKJ1A";
+      //  填入自己 ID、KEY 結束
+      let GMTString = new Date().toGMTString();
+      let ShaObj = new jsSHA("SHA-1", "TEXT");
+      ShaObj.setHMACKey(AppKey, "TEXT");
+      ShaObj.update("x-date: " + GMTString);
+      let HMAC = ShaObj.getHMAC("B64");
+      let Authorization =
+        'hmac username="' +
+        AppID +
+        '", algorithm="hmac-sha1", headers="x-date", signature="' +
+        HMAC +
+        '"';
+      return { Authorization: Authorization, "X-Date": GMTString };
+    },
   },
 };
 </script>
@@ -70,6 +112,7 @@ export default {
   line-height: 26px;
   letter-spacing: 0.2em;
 }
+
 .search-btn {
   width: 257px;
   min-height: 67px;
