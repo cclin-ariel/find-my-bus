@@ -34,7 +34,7 @@
       <!-- start of 去返程 選擇按鈕 -->
       <div :key="theStop" class="stops-card px-2 mx-auto">
         <div class="direction-selection d-flex justify-content-evenly mx-auto">
-          <router-link :to="{ name: 'Direction0' }">
+          <router-link :to="{ name: 'Direction0' , params: { routeID: routeID }}">
             <button
               :class="{ selectedColor: direction == '0' }"
               class="
@@ -83,10 +83,8 @@
 
 <script>
 import jsSHA from "jssha";
-
 import Header from "./Header.vue";
 import Footer from "./Footer.vue";
-
 export default {
   name: "BusDetail",
   components: { Header, Footer },
@@ -97,6 +95,7 @@ export default {
   },
   data() {
     return {
+      direction: "0",
       routeName: "", // the route of this detail page, and print to the page tittle
       stopsList: [], //dropdown list
       theStop: "", //dropdown list value to switch the focused stop in the 巴士時刻表

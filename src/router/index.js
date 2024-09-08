@@ -7,19 +7,19 @@ import Direction1 from "@/components/Direction1.vue";
 
 const routes = [
   {
-    path: "/find-my-bus",
+    path: "/",
     name: "Index",
     component: Index,
     props: true,
   },
   {
-    path: "/find-my-bus/searchResult/:routeName",
+    path: "/searchResult/:routeName",
     name: "SearchResult",
     component: SearchResult,
     props: true,
   },
   {
-    path: "/find-my-bus/BusDetail/:routeID/",
+    path: "/BusDetail/:routeID/",
     // /:direction
     name: "BusDetail",
     component: BusDetail,
